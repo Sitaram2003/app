@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSUPPORT - Sign In</title>
+    <link rel="stylesheet" href="/css/sign_in.css">
+</head>
+<body>
+    <header>
+        <div class="logo">VSUPPORT</div>
+    </header>
+    <main>
+        <section class="signin-form">
+            <h1>Sign In</h1>
+            <form id="signInForm">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit">Sign In</button>
+            </form>
+            <p>Don't have an account? <a href="sign_up.html">Sign Up</a></p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 VSUPPORT. All Rights Reserved.</p>
+    </footer>
+    <script>
+        document.getElementById('signInForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            try {
+                const response = await fetch('/api/auth/sign_in', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('Signed in successfully');
+                    // Handle the token as needed, e.g., store in local storage
+                    // localStorage.setItem('token', result.token);
+                    window.location.href = 'after_login.html';
+                } else {
+                    const errorText = await response.text();
+                    alert('Error: ' + errorText);
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        });
+    </script>
+</body>
+</html>

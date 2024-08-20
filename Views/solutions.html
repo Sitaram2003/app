@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions Page</title>
+    <link rel="stylesheet" href="/css/solutions.css">
+</head>
+<body>
+    <header>
+        <a href="index.html"><div class="logo">VSUPPORT</div></a>
+        <h1>Solutions</h1>
+        <p>Find the best solutions to your technical issues.</p>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <input type="text" placeholder="Search for a solution..." id="search-input">
+        <button id="search-button">Search</button>
+    </section>
+
+    <!-- Search Results Section -->
+    <section class="search-results" id="search-results">
+        <!-- This section will be populated with search results -->
+    </section>
+
+    <!-- Specialist Contact Section -->
+    <section class="contact-specialist">
+        <h2>Didn't find a solution?</h2>
+        <p>Contact our VSUPPORT specialists for personalized help.</p>
+        <form id="contact-specialist-form">
+            <input type="email" id="user-email" placeholder="Your email" required>
+            <textarea id="user-message" placeholder="Describe your issue" required></textarea>
+            <input type="file" accept="image/*" multiple>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="Privacy.html">Privacy Policy</a>
+            <a href="Terms_services.html">Terms of Service</a>
+            <a href="Contact_us.html">Contact Us</a>
+        </div>
+        <div class="social-media">
+            <a href="https://twitter.com/vsupport" target="_blank">Twitter</a>
+            <a href="https://facebook.com/vsupport" target="_blank">Facebook</a>
+            <a href="https://linkedin.com/company/vsupport" target="_blank">LinkedIn</a>
+            <a href="https://github.com/vsupport" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <!-- Script for Search Functionality -->
+    <script>
+        // Search Functionality
+        document.getElementById('search-input').addEventListener('input', function() {
+            const query = this.value.trim();
+            const searchResultsContainer = document.getElementById('search-results');
+
+            if (query.length === 0) {
+                searchResultsContainer.innerHTML = ''; // Clear results if query is empty
+                return;
+            }
+
+            // Send AJAX request to the server
+            fetch(`/api/solutions?q=${encodeURIComponent(query)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Clear previous results
+                    searchResultsContainer.innerHTML = '';
+
+                    // Check if data is not empty
+                    if (data.length > 0) {
+                        // Limit results to the top 5
+                        const limitedResults = data.slice(0, 5);
+
+                        // Iterate through the limited solutions and create HTML for each
+                        limitedResults.forEach(solution => {
+                            const solutionCard = document.createElement('div');
+                            solutionCard.classList.add('result-card');
+                            solutionCard.innerHTML = `
+                                <div class="solution-header">
+                                    <h3>${solution.issue}</h3>
+                                </div>
+                            `;
+                            solutionCard.addEventListener('click', function() {
+                                // Navigate to the dynamic page with the issue ID in the URL
+                                window.location.href = `database_issue.html?id=${solution._id}`;
+                            });
+                            searchResultsContainer.appendChild(solutionCard);
+
+                            // Apply the show class to trigger the transition
+                            setTimeout(() => solutionCard.classList.add('show'), 50);
+                        });
+                    } else {
+                        searchResultsContainer.innerHTML = '<p>No solutions found.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching search results:', error);
+                    searchResultsContainer.innerHTML = '<p>An error occurred while fetching results. Please try again later.</p>';
+                });
+        });
+        document.querySelectorAll('.result-card').forEach(card => {
+    const content = card.querySelector('p');
+    
+    if (content.scrollHeight > content.clientHeight) {
+        card.addEventListener('click', () => {
+            card.classList.toggle('show-full');
+        });
+    }
+});
+        // Contact form submission
+        document.getElementById('contact-specialist-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            const email = document.getElementById('user-email').value;
+            const message = document.getElementById('user-message').value;
+
+            // Save the user's email to the newsletter database
+            fetch('/api/newsletter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            // Construct the mailto link with the pre-filled template
+            const mailtoLink = `mailto:vsupport@example.com?subject=Contact%20Us&body=Hello%20VSUPPORT,%0D%0A%0D%0A${encodeURIComponent(message)}%0D%0A%0D%0ARegards,%0D%0A${encodeURIComponent(email)}%0D%0A%0D%0A------------------------------------------------------------------------- PLEASE FEEL FREE TO ATTACH ALL RELEVANT ATTACHMENTS -------------------------------------------------------------------`;
+
+            // Redirect to the user's email client
+            window.location.href = mailtoLink;
+        });
+    </script>
+</body>
+</html>

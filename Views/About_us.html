@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - VSUPPORT</title>
+    <link rel="stylesheet" href='/css/About_us.css'>
+</head>
+<body>
+    <header>
+        <div class="logo">VSUPPORT</div>
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="solutions.html">Solutions</a></li>
+                <li><a href="contribute.html">Contribute</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="About_us.html">About Us</a></li>
+            </ul>
+        </nav>
+        <div class="menu-toggle" id="menuToggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </header>
+    <main>
+        <section class="about-us">
+            <h1>About Us</h1>
+            <p>Welcome to VSUPPORT, your trusted partner in troubleshooting and solving technical issues. Our mission is to provide a comprehensive platform where developers and IT professionals can find solutions to their most pressing problems.</p>
+            
+            <h2>Our Story</h2>
+            <p>VSUPPORT was founded in 2024 with the vision of creating a community-driven platform that empowers individuals and organizations to overcome technical challenges. Our founders, seasoned professionals in the tech industry, recognized the need for a reliable resource where users could both find and share solutions.</p>
+            
+            <h2>Our Team</h2>
+            <div class="team">
+                <div class="team-member">
+                    <img src="/css/images/ceo.jpg" alt="John Doe">
+                    <h3>John Doe</h3>
+                    <p>CEO & Founder</p>
+                    <p>John is a tech enthusiast with over 15 years of experience in software development and IT consulting. He is passionate about building communities and helping others succeed.</p>
+                </div>
+                <div class="team-member">
+                    <img src="/css/images/download.jpg" alt="Jane Smith">
+                    <h3>Jane Smith</h3>
+                    <p>CTO & Co-Founder</p>
+                    <p>Jane has a strong background in software architecture and a love for innovative technology. She oversees the technical development of the VSUPPORT platform.</p>
+                </div>
+                <!-- Add more team members as needed -->
+            </div>
+            
+            <h2>Our Values</h2>
+            <ul>
+                <li><strong>Community-Driven:</strong> We believe in the power of community and encourage user contributions and feedback.</li>
+                <li><strong>Transparency:</strong> We are committed to providing clear, accurate, and up-to-date information.</li>
+                <li><strong>Innovation:</strong> We continuously strive to improve our platform and services.</li>
+            </ul>
+            
+            <h2>Contact Us</h2>
+            <p>If you have any questions, suggestions, or need support, please feel free to <a href="Contact_us.html">contact us</a>.</p>
+        </section>
+    </main>
+    <footer>
+        <div class="footer-links">
+            <a href="Privacy.html">Privacy Policy</a>
+            <a href="Terms_services.html">Terms of Service</a>
+            <a href="Contact_us.html">Contact Us</a>
+        </div>
+        <div class="social-media">
+            <!-- Social media links -->
+        </div>
+    </footer>
+
+
+    <script>
+        // script.js
+document.addEventListener('DOMContentLoaded', function () {
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.querySelector('.nav-menu');
+
+    menuToggle.addEventListener('click', function () {
+        navMenu.classList.toggle('active');
+    });
+});
+
+    </script>
+</body>
+</html>

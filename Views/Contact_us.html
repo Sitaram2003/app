@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - VSUPPORT</title>
+    <link rel="stylesheet" href='/css/Contact_us.css'>
+</head>
+<body>
+    <header>
+        <div class="logo">VSUPPORT</div>
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="solutions.html">Solutions</a></li>
+                <li><a href="contribute.html">Contribute</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="About_us.html">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="contact-us">
+            <h1>Contact Us</h1>
+            <p>If you have any questions, feedback, or concerns, please feel free to reach out to us using the contact form below. We value your input and aim to respond to all inquiries promptly.</p>
+
+            <form action="#" method="post">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <div class="footer-links">
+            <a href="Privacy.html">Privacy Policy</a>
+            <a href="Terms_services.html">Terms of Service</a>
+            <a href="Contact_us.html">Contact Us</a>
+        </div>
+        <div class="menu-toggle" id="menuToggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <div class="social-media">
+            <!-- Social media links -->
+        </div>
+    </footer>
+
+
+    <script>
+        // script.js
+document.addEventListener('DOMContentLoaded', function () {
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.querySelector('.nav-menu');
+
+    menuToggle.addEventListener('click', function () {
+        navMenu.classList.toggle('active');
+    });
+
+    document.querySelector('form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    try {
+        const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, message })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.msg);
+            window.location.href = data.redirectUrl;  // Redirect to the email client
+        } else {
+            alert(`Error: ${data.msg}`);
+        }
+    } catch (error) {
+        alert('An error occurred. Please try again later.');
+    }
+});
+});
+</script>
+
+</body>
+</html>

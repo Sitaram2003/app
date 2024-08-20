@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Post Solution</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"> <!-- Quill CSS -->
+</head>
+<body>
+    <header>
+        <div class="logo">VSUPPORT Admin</div>
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="solutions.html">Solutions</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="post-solution">
+            <h2>Post a New Solution</h2>
+            <form id="postSolutionForm">
+                <label for="issue">Issue Title:</label>
+                <input type="text" id="issue" name="issue" required>
+                
+                <label for="solution">Solution:</label>
+                <div id="editor-container"></div> <!-- Quill Editor -->
+
+                <input type="hidden" id="solution" name="solution">
+
+                <button type="submit">Post Solution</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 VSUPPORT. All Rights Reserved.</p>
+            <div class="footer-links">
+                <a href="Terms_services.html">Terms of Service</a>
+                <a href="Privacy.html">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script> <!-- Quill JS -->
+    <script>
+        // Initialize Quill editor
+        const quill = new Quill('#editor-container', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['link', 'image', 'code-block'],
+                    ['clean']
+                ]
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('postSolutionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const issue = document.getElementById('issue').value;
+            const solution = quill.root.innerHTML; // Get HTML content from Quill
+
+            try {
+                const response = await fetch('/api/admin/solutions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ issue, solution })
+                });
+
+                if (response.ok) {
+                    alert('Solution posted successfully!');
+                    quill.root.innerHTML = ''; // Clear the Quill editor
+                    document.getElementById('postSolutionForm').reset();
+                } else {
+                    const errorData = await response.json();
+                    alert(`Failed to post solution: ${errorData.error}`);
+                }
+            } catch (error) {
+                console.error('Error occurred during fetch:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

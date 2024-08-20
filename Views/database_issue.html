@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution Page</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">VSUPPORT</div>
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="solutions.html">Solutions</a></li>
+            <li><a href="contribute.html">Contribute</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="About_us.html">About Us</a></li>
+        </ul>
+    </nav>
+    <div class="menu-toggle" id="menuToggle">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
+</header>
+
+<div class="solution-page">
+    <header>
+        <h1 id="issue-title">Issue: Loading...</h1>
+    </header>
+
+    <section class="main-solution">
+        <h2>Solution:</h2>
+        <p id="primary-solution">Loading...</p>
+    </section>
+
+    <section class="feedback">
+        <h2>Community Feedback</h2>
+        <div class="upvote">
+            <button id="upvote-btn">👍 Upvote</button>
+            <span id="upvotes-count">0 Upvotes</span>
+        </div>
+    </section>
+    <!-- Specialist Contact Section -->
+    <section class="contact-specialist">
+        <h2>If the solution didn't help you?</h2>
+        <p>Contact our VSUPPORT specialists for personalized help.</p>
+        <form id="contact-specialist-form">
+            <input type="email" id="user-email" placeholder="Your email" required>
+            <textarea id="user-message" placeholder="Describe your issue" required></textarea>
+            <input type="file" accept="image/*" multiple>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+</div>
+
+<footer>
+    <div class="footer-links">
+        <a href="Privacy.html">Privacy Policy</a>
+        <a href="Terms_services.html">Terms of Service</a>
+        <a href="Contact_us.html">Contact Us</a>
+    </div>
+    <div class="social-media">
+        <a href="https://twitter.com/vsupport" target="_blank">Twitter</a>
+        <a href="https://facebook.com/vsupport" target="_blank">Facebook</a>
+        <a href="https://linkedin.com/company/vsupport" target="_blank">LinkedIn</a>
+        <a href="https://github.com/vsupport" target="_blank">GitHub</a>
+    </div>
+</footer>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const issueId = getQueryParam('id');
+    
+    // Load initial solution
+    loadSolution();
+
+    // Function to get query parameter by name
+    function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    // Fetch solution data and update the page
+    function loadSolution() {
+        const issueId = getQueryParam('id'); // Extract issue ID from URL
+
+        if (!issueId) {
+            document.getElementById('issue-title').innerText = 'Issue ID not provided';
+            document.getElementById('primary-solution').innerText = 'No solution details available.';
+            document.getElementById('upvotes-count').innerText = '0 Upvotes';
+            return;
+        }
+
+        fetch(`/api/solutions/${issueId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    document.getElementById('issue-title').innerText = `${data.issue}`;
+                    document.getElementById('primary-solution').innerHTML = `${data.solution}`;
+                    document.getElementById('upvotes-count').innerText = `${data.upvotes || 0} Upvotes`;
+
+                    document.getElementById('upvote-btn').addEventListener('click', () => {
+                        upvoteSolution(issueId);
+                    });
+                } else {
+                    document.getElementById('issue-title').innerText = 'Solution not found';
+                    document.getElementById('primary-solution').innerText = 'No solution details available.';
+                    document.getElementById('upvotes-count').innerText = '0 Upvotes';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching solution:', error);
+                document.getElementById('issue-title').innerText = 'Error';
+                document.getElementById('primary-solution').innerText = 'Failed to load solution details.';
+                document.getElementById('upvotes-count').innerText = '0 Upvotes';
+            });
+    }
+    function upvoteSolution(issueId) {
+        fetch(`/api/solutions/${issueId}/upvote`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data && typeof data.upvotes === 'number') {
+                    document.getElementById('upvotes-count').innerText = `${data.upvotes} Upvotes`;
+                } else {
+                    console.error('Invalid upvote data:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error upvoting solution:', error);
+            });
+    }
+});
+  // Contact form submission
+  document.getElementById('contact-specialist-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            const email = document.getElementById('user-email').value;
+            const message = document.getElementById('user-message').value;
+
+            // Save the user's email to the newsletter database
+            fetch('/api/newsletter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            // Construct the mailto link with the pre-filled template
+            const mailtoLink = `mailto:vsupport@example.com?subject=Contact%20Us&body=Hello%20VSUPPORT,%0D%0A%0D%0A${encodeURIComponent(message)}%0D%0A%0D%0ARegards,%0D%0A${encodeURIComponent(email)}%0D%0A%0D%0A------------------------------------------------------------------------- PLEASE FEEL FREE TO ATTACH ALL RELEVANT ATTACHMENTS -------------------------------------------------------------------`;
+
+            // Redirect to the user's email client
+            window.location.href = mailtoLink;
+        });
+</script>
+</body>
+</html>
