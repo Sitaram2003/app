@@ -20,7 +20,7 @@ connectDB();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, './public')));
+app.use(express.static(path.join(__dirname, '/public')));
 app.use(cookieParser()); // Added cookie parser middleware
 
 // Serve HTML files
@@ -34,7 +34,7 @@ app.get('/:page', (req, res) => {
     ];
 
     if (validPages.includes(page)) {
-        res.sendFile(path.join(__dirname, `./views/${page}`));
+        res.sendFile(path.join(__dirname, `./Views/${page}`));
     } else {
         res.status(404).send('Page not found');
     }
