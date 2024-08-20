@@ -50,17 +50,4 @@ app.use('/api/auth', require('./vsupport-backend/routes/Auth'));
 app.use('/api/admin', require('./vsupport-backend/routes/admin'));
 app.use('/api/stats', require('./vsupport-backend/routes/stats'));
 
-// New route for after_login.html page
 
-
-// Start Server
-const PORT = 5000;
-server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-
-// Socket.io connection
-io.on('connection', (socket) => {
-    console.log('A user connected');
-    socket.on('disconnect', () => {
-        console.log('A user disconnected');
-    });
-});
