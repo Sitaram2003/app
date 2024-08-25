@@ -53,6 +53,7 @@ app.use('/api/contact', require('./vsupport-backend/routes/contact'));
 app.use('/api/auth', require('./vsupport-backend/routes/Auth'));
 app.use('/api/admin', require('./vsupport-backend/routes/admin'));
 app.use('/api/stats', require('./vsupport-backend/routes/stats'));
+app.use('/api', require('./vsupport-backend/routes/user'));
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
