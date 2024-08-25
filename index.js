@@ -24,10 +24,14 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(cookieParser()); // Added cookie parser middleware
 
 // Serve HTML files
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname,'/Views/index.html'));
+});
+
 app.get('/:page', (req, res) => {
     const page = req.params.page;
     const validPages = [
-        'index.html', 'after_login.html', 'solutions.html',
+        'after_login.html', 'solutions.html',
         'contribute.html', 'community.html', 'About_us.html',
         'Privacy.html', 'Terms_services.html', 'Contact_us.html',
         'sign_in.html', 'sign_up.html', 'database_issue.html','admin.html','dashboard.html'
