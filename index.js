@@ -34,7 +34,7 @@ app.get('/:page', (req, res) => {
         'after_login.html', 'solutions.html',
         'contribute.html', 'community.html', 'About_us.html',
         'Privacy.html', 'Terms_services.html', 'Contact_us.html',
-        'sign_in.html', 'sign_up.html', 'database_issue.html','admin.html','dashboard.html'
+        'sign_in.html', 'sign_up.html', 'database_issue.html','admin.html','dashboard.html', 'user_dashboard.html'
     ];
 
     if (validPages.includes(page)) {
