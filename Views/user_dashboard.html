@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="/css/user_dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>User Dashboard</h1>
+            <button id="logout-btn" class="logout-btn">Logout</button>
+        </header>
+        
+        <div class="user-info">
+            <h2>Username: <span id="username"></span></h2>
+            <h2>Email: <span id="email"></span></h2>
+        </div>
+        
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="#">My Profile</a></li>
+                <li><a href="#">My Solutions</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#">Support</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userId = localStorage.getItem('userId');
+            const token = localStorage.getItem('token');
+
+            // If userId or token is missing, redirect to the sign-in page
+            if (!userId || !token) {
+                alert('Please sign in first.');
+                window.location.href = 'sign_in.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/users/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+                    document.getElementById('username').textContent = user.username;
+                    document.getElementById('email').textContent = user.email;
+                } else {
+                    if (response.status === 401) {
+                        alert('Session expired. Please sign in again.');
+                    } else {
+                        alert('Failed to fetch user information.');
+                    }
+                    window.location.href = 'sign_in.html';
+                }
+            } catch (err) {
+                console.error('Error fetching user information:', err);
+                alert('An error occurred. Please try again later.');
+                window.location.href = 'sign_in.html';
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            window.location.href = 'sign_in.html';
+        });
+    </script>
+</body>
+</html>
