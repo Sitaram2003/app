@@ -2,7 +2,6 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const JWT_KEY = 'hello';
 const router = express.Router();
 
 // Sign up endpoint
