@@ -49,8 +49,13 @@
                 if (response.ok) {
                     const result = await response.json();
                     alert('Signed in successfully');
-                    // Handle the token as needed, e.g., store in local storage
-                    // localStorage.setItem('token', result.token);
+                    // Store the token and user ID in localStorage
+                    localStorage.setItem('token', result.token);
+
+                    // Decode the token to extract the user ID
+                    const decodedToken = JSON.parse(atob(result.token.split('.')[1]));
+                    localStorage.setItem('userId', decodedToken.userId);
+
                     window.location.href = 'after_login.html';
                 } else {
                     const errorText = await response.text();
