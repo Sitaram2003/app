@@ -24,7 +24,7 @@
             <span class="bar"></span>
         </div>
         <div class="search-bar">
-            <span id="username" style="margin-right: 10px;"></span>
+            <a href="user_dashboard.html">My Profile</a>
             <a href="/"><button>Logout</button></a>
         </div>
         
@@ -288,17 +288,29 @@ document.addEventListener('DOMContentLoaded', function () {
         alert('Error subscribing. Please try again.');
     }
 });
-
-const token = localStorage.getItem('token');
-        if (token) {
-            // Decode the token
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            document.getElementById('username').textContent = payload.username;
-        } else {
-            document.getElementById('username').textContent = 'Hello Techie    ';
-        }
     });
-
+    const token = localStorage.getItem('token');
+        
+        if (!token) {
+            // If token is missing, redirect to the login page
+            window.location.href = 'index.html';
+        } else {
+            try {
+                // Decode the token to verify it is valid
+                const decodedToken = JSON.parse(atob(token.split('.')[1]));
+                const expiryTime = decodedToken.exp * 1000; // Convert to milliseconds
+                
+                // Check if the token has expired
+                if (Date.now() > expiryTime) {
+                    // Token has expired, redirect to login
+                    localStorage.removeItem('token');
+                    window.location.href = 'index.html';
+                }
+            } catch (err) {
+                // If there's an error decoding the token, redirect to login
+                window.location.href = 'index.html';
+            }
+        }
     </script>
 </body>
 </html>
