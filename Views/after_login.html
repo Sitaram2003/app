@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (!token) {
             // If token is missing, redirect to the login page
-            window.location.href = 'index.html';
+            window.location.href = '/';
         } else {
             try {
                 // Decode the token to verify it is valid
@@ -304,11 +304,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (Date.now() > expiryTime) {
                     // Token has expired, redirect to login
                     localStorage.removeItem('token');
-                    window.location.href = 'index.html';
+                    window.location.href = '/';
                 }
             } catch (err) {
                 // If there's an error decoding the token, redirect to login
-                window.location.href = 'index.html';
+                window.location.href = '/';
             }
         }
     </script>
